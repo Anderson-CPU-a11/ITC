@@ -174,17 +174,87 @@ section.alt::after{content:"";position:absolute;top:0;left:0;right:0;height:10px
 .spin .k{transform:rotateY(180deg) translateZ(15px);backface-visibility:hidden;-webkit-backface-visibility:hidden}
 @keyframes turn{0%,30%{transform:rotateY(0)}70%,100%{transform:rotateY(360deg)}}
 .hero h1{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0}
+.avatar img{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;object-fit:cover;z-index:0}
+.avatar.has{font-size:0}
+.allies{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;margin-top:34px}
+.ally{flex:0 1 210px;min-height:130px;display:grid;place-items:center;padding:22px;border:1px solid var(--line);border-bottom:3px solid var(--red);background:#080808;text-decoration:none;text-align:center;transition:transform .3s,box-shadow .3s,border-color .3s;animation:rise .6s both}
+.ally img{max-width:100%;max-height:84px;object-fit:contain;transition:transform .3s}
+.ally span{font:600 18px var(--head);color:var(--mute)}
+a.ally:hover{transform:translateY(-6px);border-color:var(--red);box-shadow:0 12px 36px rgba(224,17,31,.3)}
+a.ally:hover img{transform:scale(1.07)}
+.kebab{display:none;margin-left:auto;width:44px;height:44px;border:0;background:transparent;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:0}
+.kebab span{width:5px;height:5px;border-radius:50%;background:#fff;transition:background .3s,transform .3s}
+.kebab:hover span,.kebab[aria-expanded=true] span{background:var(--red2)}
+.kebab[aria-expanded=true] span:nth-child(2){transform:scale(1.5)}
+@media (max-width:900px){
+.kebab{display:flex}
+nav .links{position:absolute;top:100%;right:12px;left:auto;min-width:230px;flex:none;flex-direction:column;gap:0;background:rgba(10,10,10,.98);border:1px solid var(--line);border-top:2px solid var(--red);padding:8px 0;max-height:calc(100vh - 100px);overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .25s,transform .25s,visibility .25s;box-shadow:0 18px 40px rgba(0,0,0,.75)}
+nav .links.open{opacity:1;visibility:visible;transform:none}
+nav .links a{padding:13px 22px;border-bottom:0;border-left:3px solid transparent;font-size:17px}
+nav .links a:hover,nav .links a.on{border-left-color:var(--red);background:rgba(224,17,31,.12)}
+}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}.rv{opacity:1;translate:0 0}h2::after{width:120px}#load{display:none}}
 </style>
 </head>
 <body>
+<script>
+/* ==========================================================================
+   CONFIGURACIÓN DE IMÁGENES  ->  AQUÍ SOLO EDITAS ESTA PARTE
+   --------------------------------------------------------------------------
+   Escribe la ruta de la imagen entre comillas simples. Ejemplos:
+       'img/anderson.jpg'           (archivo dentro de la carpeta "img", junto a este index.html)
+       'https://mipagina.com/foto.png'   (enlace de internet)
+   Si dejas '' (vacío) se queda el diseño por defecto (inicial en el círculo / dibujo del camión).
+   Si la imagen no carga o la ruta está mal, también se queda el diseño por defecto.
+   ========================================================================== */
+window.ITC={
+
+  /* ---------- FONDO DE LA SECCIÓN INICIO ---------- */
+  fondoInicio:'',        /* ejemplo: 'img/fondo.jpg'  (recomendado: horizontal, 1920x1080) */
+  fondoOpacidad:0.3,     /* qué tanto se ve: 0 = invisible, 0.3 = tenue (por defecto), 1 = fuerte */
+
+  /* ---------- FOTOS DE PERFIL DE LA COMUNIDAD ----------
+     La izquierda es el nombre EXACTO como aparece en la página, la derecha la ruta de la foto.
+     Para agregar a alguien nuevo, añade una línea:  'Nombre':'img/nombre.jpg',
+     Recomendado: foto cuadrada (ej. 400x400). Se recorta en círculo sola.            */
+  fotos:{
+    /* Administradores */
+    'Anderson':'',
+    'Tavo':'',
+    'Kofla':'',
+    'Caballero':'',
+    'Sori':'',
+    /* ITC */
+    'Benya':'',
+    'Fabian':'',
+    'Jekko Daza':'',
+    'Diego Erazo':'',
+    'Mecato':''
+  },
+
+  /* ---------- ALIADOS (aparecen al final de la página) ----------
+     nombre: texto que se muestra si no hay logo (o si el logo no carga)
+     logo:   ruta del logo SIN FONDO (PNG o SVG transparente), ej. 'img/aliado1.png'
+     link:   página web del aliado, ej. 'https://sitioaliado.com'  (si lo dejas '' no es clicable)
+     Para agregar otro, copia una línea completa y sepárala con coma.
+     Si borras todas las líneas, la sección Aliados se oculta sola.                       */
+  aliados:[
+    {nombre:'Aliado 1', logo:'', link:''},
+    {nombre:'Aliado 2', logo:'', link:''},
+    {nombre:'Aliado 3', logo:'', link:''},
+    {nombre:'Aliado 4', logo:'', link:''}
+  ]
+};
+</script>
 <div id="load"><img data-l alt=""></div>
 <div id="prog"></div><div id="glow"></div><canvas id="snow" aria-hidden="true"></canvas>
 <nav><div class="wrap">
 <img data-l width="42" height="42" alt="Logo ITC">
-<div class="links">
-<a href="#inicio">Inicio</a><a href="#nosotros">Nosotros</a><a href="#comunidad">Comunidad</a><a href="#anuncios">Anuncios</a><a href="#mods">Mods</a><a href="#videos">Videos</a><a href="#ingreso">Ingreso</a><a href="#reglas">Reglas</a><a href="#regalo">Regalo</a><a href="#redes">Redes</a><a href="#unete">Únete</a>
-</div></div></nav>
+<div class="links" id="navlinks">
+<a href="#inicio">Inicio</a><a href="#nosotros">Nosotros</a><a href="#comunidad">Comunidad</a><a href="#anuncios">Anuncios</a><a href="#mods">Mods</a><a href="#videos">Videos</a><a href="#ingreso">Ingreso</a><a href="#reglas">Reglas</a><a href="#regalo">Regalo</a><a href="#redes">Redes</a><a href="#unete">Únete</a><a href="#aliados">Aliados</a>
+</div>
+<button class="kebab" id="kebab" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+</div></nav>
 <div class="ticker" aria-label="Avisos"><span>❄ ¡Feliz Navidad desde ITC! ❄ ◆ Bienvenido a Imperium Truckers Corporation ◆ Reclutamiento abierto ◆ Convoy de inauguración muy pronto ◆ Únete a nuestro Discord ◆ Camino despejado, conductores</span></div>
 
 <header class="hero" id="inicio"><div class="bgimg" aria-hidden="true"></div><canvas id="fx"></canvas><div class="road"></div><div class="sleigh" aria-hidden="true">🦌🦌🛷</div><div class="lights" id="lights" aria-hidden="true"></div>
@@ -215,7 +285,7 @@ section.alt::after{content:"";position:absolute;top:0;left:0;right:0;height:10px
 <h2>Nuestra comunidad</h2>
 <h3 class="grp">Administradores</h3>
 <div class="members">
-<div class="member adm"><div class="avatar">A</div><h3>Anderson</h3><p>Administrador</p></div>
+<div class="member adm"><div class="avatar">ander.png</div><h3>Anderson</h3><p>Administrador</p></div>
 <div class="member adm"><div class="avatar">T</div><h3>Tavo</h3><p>Administrador</p></div>
 <div class="member adm"><div class="avatar">K</div><h3>Kofla</h3><p>Administrador</p></div>
 <div class="member adm"><div class="avatar">C</div><h3>Caballero</h3><p>Administrador</p></div>
@@ -236,7 +306,6 @@ section.alt::after{content:"";position:absolute;top:0;left:0;right:0;height:10px
 <h2>Anuncios</h2>
 <div class="news">
 <article class="post"><div class="ph">Espacio para imagen<br>(16:9)</div><div><small>Fecha del anuncio</small><h3>Título del anuncio</h3><p>Aquí va el texto del anuncio: convoyes, eventos, cambios en la empresa o cualquier noticia de la comunidad.</p></div></article>
-<article class="post"><div class="ph">Espacio para imagen<br>(16:9)</div><div><small>Fecha del anuncio</small><h3>Título del anuncio</h3><p>Aquí va el texto del anuncio.</p></div></article>
 </div>
 </div></section>
 
@@ -246,9 +315,7 @@ section.alt::after{content:"";position:absolute;top:0;left:0;right:0;height:10px
 <p style="margin-top:18px">Los mods que usamos en la comunidad y los recomendados para los convoyes.</p>
 <div class="filters"><button class="chip" data-f="todos" aria-pressed="true">Todos</button><button class="chip" data-f="camiones" aria-pressed="false">Camiones</button><button class="chip" data-f="mapas" aria-pressed="false">Mapas</button><button class="chip" data-f="sonido" aria-pressed="false">Sonido</button></div>
 <div class="grid" id="modgrid">
-<div class="card" data-cat="camiones"><div class="ph" style="margin-bottom:14px">Imagen del mod</div><h3>Nombre del mod</h3><p>Categoría: camiones. Descripción breve.</p><a class="dl" href="#">Ver mod</a></div>
-<div class="card" data-cat="mapas"><div class="ph" style="margin-bottom:14px">Imagen del mod</div><h3>Nombre del mod</h3><p>Categoría: mapas. Descripción breve.</p><a class="dl" href="#">Ver mod</a></div>
-<div class="card" data-cat="sonido"><div class="ph" style="margin-bottom:14px">Imagen del mod</div><h3>Nombre del mod</h3><p>Categoría: sonido. Descripción breve.</p><a class="dl" href="#">Ver mod</a></div>
+<div class="card" data-cat=""><div class="ph" style="margin-bottom:14px">Imagen del mod</div><h3>ROAD TRIP SKIN PACK</h3><p>PAQUETE DE DISEÑOS (SKINS).</p><a class="dl" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3811668836">Ver mod</a></div>
 </div>
 </div></section>
 
@@ -257,9 +324,7 @@ section.alt::after{content:"";position:absolute;top:0;left:0;right:0;height:10px
 <h2>Videos</h2>
 <p style="margin-top:18px">Videos grabados por los integrantes de ITC.</p>
 <div class="grid">
-<div class="card"><h3>Título del video</h3><p>Por: nombre del integrante</p><a class="dl" href="#">Ver video</a></div>
-<div class="card"><h3>Título del video</h3><p>Por: nombre del integrante</p><a class="dl" href="#">Ver video</a></div>
-<div class="card"><h3>Título del video</h3><p>Por: nombre del integrante</p><a class="dl" href="#">Ver video</a></div>
+  
 </div>
 </div></section>
 
@@ -312,21 +377,22 @@ section.alt::after{content:"";position:absolute;top:0;left:0;right:0;height:10px
 <h2>Nuestras redes</h2>
 <p style="margin-top:18px">Encuentra a ITC donde más te guste.</p>
 <div class="grid">
-<a class="card soc" href="#"><span class="ico">D</span><div><h3>Discord</h3><p>Chat, convoyes y soporte</p></div></a>
-<a class="card soc" href="#"><span class="ico">▶</span><div><h3>YouTube</h3><p>Videos y transmisiones</p></div></a>
-<a class="card soc" href="#"><span class="ico">♪</span><div><h3>TikTok</h3><p>Clips cortos de la ruta</p></div></a>
-<a class="card soc" href="#"><span class="ico">f</span><div><h3>Facebook</h3><p>Noticias y grupo</p></div></a>
-<a class="card soc" href="#"><span class="ico">◎</span><div><h3>Instagram</h3><p>Fotos y momentos</p></div></a>
-<a class="card soc" href="#"><span class="ico">T</span><div><h3>Twitch</h3><p>Directos en vivo</p></div></a>
-<a class="card soc" href="#"><span class="ico">S</span><div><h3>Steam</h3><p>Grupo de la comunidad</p></div></a>
-<a class="card soc" href="#"><span class="ico">M</span><div><h3>TruckersMP</h3><p>Perfil de la empresa</p></div></a>
+<a class="card soc" href="https://discord.gg/ADrjMaFfzX"><span class="ico">D</span><div><h3>Discord</h3><p>Chat, convoyes y soporte</p></div></a>
+<a class="card soc" href="https://trucksbook.eu/company/231997"><span class="ico">M</span><div><h3>TruckersMP</h3><p>Perfil de la empresa</p></div></a>
 </div>
 </div></section>
 
 <section class="join" id="unete"><div class="wrap">
 <h2>Súmate al imperio</h2>
 <p>Entra a nuestro Discord, preséntate y espera tu convoy de bienvenida.</p>
-<a class="btn" href="#">Unirme al Discord</a>
+<a class="btn" href="https://discord.gg/ADrjMaFfzX">Unirme al Discord</a>
+</div></section>
+
+<section class="alt" id="aliados"><div class="wrap">
+<div class="kicker">Juntos llegamos más lejos</div>
+<h2>Nuestros aliados</h2>
+<p style="margin-top:18px">Comunidades y empresas que caminan con ITC.</p>
+<div class="allies" id="allies"></div>
 </div></section>
 
 <footer><div class="bar"></div>© 2026 Imperium Truckers Corporation (ITC). Comunidad no oficial de American Truck Simulator.<br>❄ ¡Felices fiestas! ❄</footer>
@@ -399,5 +465,36 @@ b.onclick=function(){var i;do{i=Math.floor(Math.random()*M.length)}while(i===las
 })();
 </script>
 
+<script>
+/* Aplica la configuración de imágenes de arriba (no necesitas tocar esto) */
+(function(){
+var C=window.ITC||{},bg=document.querySelector('.bgimg');
+if(bg&&C.fondoOpacidad!=null)bg.style.opacity=C.fondoOpacidad;
+if(bg&&C.fondoInicio){var t=new Image();t.onload=function(){bg.style.backgroundImage='url("'+C.fondoInicio+'")'};t.src=C.fondoInicio}
+var F=C.fotos||{};
+document.querySelectorAll('.member').forEach(function(m){
+var n=m.querySelector('h3').textContent.trim(),u=F[n];if(!u)return;
+var av=m.querySelector('.avatar'),im=new Image();im.alt='Foto de '+n;
+im.onload=function(){av.appendChild(im);av.classList.add('has')};im.src=u});
+var A=C.aliados||[],box=document.getElementById('allies');
+if(!A.length){document.getElementById('aliados').style.display='none';var l=document.querySelector('a[href="#aliados"]');if(l)l.style.display='none'}
+A.forEach(function(a){var el=document.createElement(a.link?'a':'div'),s=document.createElement('span');
+el.className='ally';if(a.link){el.href=a.link;el.target='_blank';el.rel='noopener'}
+s.textContent=a.nombre||'Aliado';el.appendChild(s);box.appendChild(el);
+if(a.logo){var im=new Image();im.alt=a.nombre||'Aliado';im.onload=function(){el.textContent='';el.appendChild(im)};im.src=a.logo}})
+})();
+</script>
+<script>
+(function(){
+var b=document.getElementById('kebab'),m=document.getElementById('navlinks');
+function set(o){m.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.setAttribute('aria-label',o?'Cerrar menú':'Abrir menú')}
+b.onclick=function(e){e.stopPropagation();set(!m.classList.contains('open'))};
+m.addEventListener('click',function(e){if(e.target.closest('a'))set(false)});
+document.addEventListener('click',function(e){if(!m.contains(e.target))set(false)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});
+addEventListener('resize',function(){if(innerWidth>900)set(false)});
+addEventListener('scroll',function(){set(false)},{passive:true});
+})();
+</script>
 </body>
 </html>
