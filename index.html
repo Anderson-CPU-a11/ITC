@@ -150,7 +150,7 @@ footer::before{content:"";position:absolute;left:0;right:0;top:-1px;height:12px;
 section.alt::after{content:"";position:absolute;top:0;left:0;right:0;height:10px;background:radial-gradient(circle at 15px 5px,#ff2a36 0 4px,transparent 5px) 0 0/60px 10px,radial-gradient(circle at 45px 5px,#fff 0 4px,transparent 5px) 0 0/60px 10px;filter:drop-shadow(0 0 5px #ff2a36);animation:tw2 1.4s ease-in-out infinite alternate;pointer-events:none}
 @keyframes tw2{to{opacity:.3}}
 .sleigh{position:absolute;top:20%;left:0;z-index:1;font-size:36px;white-space:nowrap;filter:drop-shadow(0 0 10px rgba(224,17,31,.7));animation:fly 24s linear infinite;animation-delay:-6s;pointer-events:none}
-@keyframes fly{0%{transform:translate(-40vw,0)}50%{transform:translate(50vw,-26px)}100%{transform:translate(110vw,10px)}}
+@keyframes fly{0%{transform:translate(110vw,10px)}50%{transform:translate(50vw,-26px)}100%{transform:translate(-40vw,0)}}
 .gift{text-align:center;background:radial-gradient(ellipse at 50% 100%,rgba(224,17,31,.3),transparent 65%),#050505}
 .gift h2::after{margin:14px auto 0}
 .gift .wrap>p{margin-left:auto;margin-right:auto}
@@ -193,6 +193,15 @@ nav .links.open{opacity:1;visibility:visible;transform:none}
 nav .links a{padding:13px 22px;border-bottom:0;border-left:3px solid transparent;font-size:17px}
 nav .links a:hover,nav .links a.on{border-left-color:var(--red);background:rgba(224,17,31,.12)}
 }
+section.sale{background:radial-gradient(ellipse at 50% 0%,rgba(224,17,31,.28),transparent 60%),#050505}
+.sales{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));margin-top:34px;max-width:900px}
+.sitem{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:18px;border:1px solid var(--line);border-top:3px solid var(--red);background:#080808;animation:rise .7s both;transition:transform .3s,box-shadow .3s,border-color .3s}
+.sitem:hover{transform:translateY(-6px);border-color:var(--red);box-shadow:0 14px 40px rgba(224,17,31,.3)}
+.sitem .ph{width:100%;margin-bottom:6px}
+.sitem small{color:var(--red2);font:600 13px var(--head);letter-spacing:.1em;text-transform:uppercase}
+.sitem p{margin:0;color:var(--mute);font-size:16px}
+.sitem .price{font:700 30px var(--head);color:#fff}
+.sitem .btn{margin-top:8px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}.rv{opacity:1;translate:0 0}h2::after{width:120px}#load{display:none}}
 </style>
 </head>
@@ -241,6 +250,20 @@ window.ITC={
     {nombre:'XPS', logo:'xps.png', link:'https://sites.google.com/view/clan-xps/inicio'},
     {nombre:'Rojo Truckers', logo:'rojo.png', link:'https://rojopagina-1.onrender.com/'},
     {nombre:'Camilo Designs', logo:'cd.jpg', link:'https://discord.gg/wk4t3bU8nk'},
+  ],
+
+  /* ---------- VENTAS (skins personalizadas) ----------
+     nombre:      nombre de la skin
+     precio:      texto del precio, ej. '$30.000 COP' o '10 USD'
+     descripcion: texto corto (qué incluye, camión, etc.)
+     imagen:      ruta de la foto de la skin, ej. 'skin1.png'
+     link:        a dónde lleva el botón (tu Discord, WhatsApp, etc.). Si lo dejas '' no sale botón.
+     boton:       texto del botón, ej. 'Comprar'
+     Para agregar otra venta, copia una línea completa y sepárala con coma.
+     Si borras todas las líneas, la sección Ventas se oculta sola.                         */
+  ventas:[
+    {nombre:'Skin personalizada 1', precio:'Precio por definir', descripcion:'Descripción de la skin: camión, diseño y qué incluye.', imagen:'', link:'https://discord.gg/ADrjMaFfzX', boton:'Comprar'},
+    {nombre:'Skin personalizada 2', precio:'Precio por definir', descripcion:'Descripción de la skin: camión, diseño y qué incluye.', imagen:'', link:'https://discord.gg/ADrjMaFfzX', boton:'Comprar'}
   ]
 };
 </script>
@@ -249,7 +272,7 @@ window.ITC={
 <nav><div class="wrap">
 <img data-l width="42" height="42" alt="Logo ITC">
 <div class="links" id="navlinks">
-<a href="#inicio">Inicio</a><a href="#nosotros">Nosotros</a><a href="#comunidad">Comunidad</a><a href="#anuncios">Anuncios</a><a href="#mods">Mods</a><a href="#videos">Videos</a><a href="#ingreso">Ingreso</a><a href="#reglas">Reglas</a><a href="#regalo">Regalo</a><a href="#redes">Redes</a><a href="#unete">Únete</a><a href="#aliados">Aliados</a>
+<a href="#inicio">Inicio</a><a href="#nosotros">Nosotros</a><a href="#comunidad">Comunidad</a><a href="#anuncios">Anuncios</a><a href="#mods">Mods</a><a href="#ventas">Ventas</a><a href="#videos">Videos</a><a href="#ingreso">Ingreso</a><a href="#reglas">Reglas</a><a href="#regalo">Regalo</a><a href="#redes">Redes</a><a href="#unete">Únete</a><a href="#aliados">Aliados</a>
 </div>
 <button class="kebab" id="kebab" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
 </div></nav>
@@ -321,6 +344,13 @@ window.ITC={
 </div>
 </div></section>
 
+<section class="sale" id="ventas"><div class="wrap">
+<div class="kicker">Tienda ITC</div>
+<h2>Ventas</h2>
+<p style="margin-top:18px">Skins personalizadas hechas a tu medida. Escríbenos por Discord para comprar.</p>
+<div class="sales" id="sales"></div>
+</div></section>
+
 <section class="alt" id="videos"><div class="wrap">
 <div class="kicker">De nuestros conductores</div>
 <h2>Videos</h2>
@@ -335,7 +365,7 @@ window.ITC={
 <h2>Pide tu ingreso</h2>
 <p style="margin-top:18px">Completa los datos, copia la solicitud y pégala en nuestro Discord.</p>
 <div class="calc">
-<label>Usuario de Steam o TruckersMP<input id="fu" type="text"></label>
+<label>Usuario de Steam o TrucksBook<input id="fu" type="text"></label>
 <label>País<input id="fp" type="text"></label>
 <label>Horas en ATS<input id="fh" type="number" min="0"></label>
 </div>
@@ -380,7 +410,7 @@ window.ITC={
 <p style="margin-top:18px">Encuentra a ITC donde más te guste.</p>
 <div class="grid">
 <a class="card soc" href="https://discord.gg/ADrjMaFfzX"><span class="ico">D</span><div><h3>Discord</h3><p>Chat, convoyes y soporte</p></div></a>
-<a class="card soc" href="https://trucksbook.eu/company/231997"><span class="ico">M</span><div><h3>TruckersMP</h3><p>Perfil de la empresa</p></div></a>
+<a class="card soc" href="https://trucksbook.eu/company/231997"><span class="ico">TB</span><div><h3>TrucksBook</h3><p>Empresa en TrucksBook</p></div></a>
 </div>
 </div></section>
 
@@ -496,6 +526,23 @@ document.addEventListener('click',function(e){if(!m.contains(e.target))set(false
 document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});
 addEventListener('resize',function(){if(innerWidth>900)set(false)});
 addEventListener('scroll',function(){set(false)},{passive:true});
+})();
+</script>
+<script>
+/* Dibuja las ventas definidas arriba en window.ITC.ventas (no necesitas tocar esto) */
+(function(){
+var V=(window.ITC&&ITC.ventas)||[],box=document.getElementById('sales'),sec=document.getElementById('ventas');
+if(!V.length){sec.style.display='none';var l=document.querySelector('a[href="#ventas"]');if(l)l.style.display='none';return}
+V.forEach(function(v,i){
+var c=document.createElement('article');c.className='sitem';c.style.animationDelay=i*120+'ms';
+var ph=document.createElement('div');ph.className='ph';ph.textContent='Imagen de la skin';c.appendChild(ph);
+if(v.imagen){var im=new Image();im.alt=v.nombre||'Skin';im.style.cssText='width:100%;height:100%;object-fit:cover;display:block';im.onload=function(){ph.textContent='';ph.appendChild(im)};im.src=v.imagen}
+var t=document.createElement('small');t.textContent='Skin personalizada';c.appendChild(t);
+var h=document.createElement('h3');h.textContent=v.nombre||'Skin';c.appendChild(h);
+if(v.precio){var pr=document.createElement('div');pr.className='price';pr.textContent=v.precio;c.appendChild(pr)}
+if(v.descripcion){var d=document.createElement('p');d.textContent=v.descripcion;c.appendChild(d)}
+if(v.link){var a=document.createElement('a');a.className='btn';a.href=v.link;a.target='_blank';a.rel='noopener';a.textContent=v.boton||'Comprar';c.appendChild(a)}
+box.appendChild(c)})
 })();
 </script>
 </body>
